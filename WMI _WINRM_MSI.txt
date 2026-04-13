@@ -1,0 +1,359 @@
+﻿WMI (Windows Management Instrumentation)
+WMI (Windows Management Instrumentation)
+Q: what is WMI?
+Ans: WMI is a set of extentions to the windows driver model which provides an operating system interface through which instrumented components can provide information and notification.
+WMI is microsoft's implementation of WBEM (Web Based Enterprise Management) and CIM (Common Information Model) from the standards from the DMTF (Distributed Management Task Force)
+________________
+
+
+Q What is the purpose of WMI
+The Purpose of WMI is to define a proprietary set of environment-independent specification which allows management information to be shared between management applications.
+Uses of WMI:
+i) Hardware & Software inventory: WMI helps gather information about installed hardware components (such as CPU, memory, Disk, etc) and software application.
+ii) System Configuration: You can use WMI to query & configure system settings, security policies, permissions & other parameters.
+iii) Event Monitoring: WMI enables event-based monitoring, you can receive alerts when specific event occurs, eg: (System Startup, logon, disk space threshold, etc.)
+iv) Performance Monitoring: WMI provides performance counters and metrics for monitoring system performance (CPU usage, memory utilization, network activity, etc.)
+v) Registry files System data: WMI allows access to registry keys, values, and file system information.
+vi) Custom Management application: Developers can create custom management application using WMI to automate tasks perform diagnostics and manage resources.
+________________
+
+
+Note: WMI -> it is implemented as a service process within a shared service host (svchost). The name of WMI service is Winmgmt. Depending on the setup, WMI Service may shut down or go into low memory profile when no management application is being called by a management application.
+[Diagram Transcription]
+Management Apps:
+* Database App. <-> ODBC
+* Web browser <-> ActiveX Controls
+* C/C++ APPS
+* (All connect to) -> WINDOWS MANAGEMENT API
+COM / DCOM Interface
+WMI infrastructure:
+* CIM repository <-> CIM Object Manager (CIMOM)
+Providers:
+* SNMP Provider -> SNMP objects
+* Win32 Provider -> Win32 objects
+* Registry Provider -> Registry objects
+________________
+
+
+* WINMGMT -> Starts when the first management application or script makes a call to connect to a WMI namespace.
+WMI Consumers: WMI consumers and management applications, or scripts, interact with WMI infrastructure by calling the WMI API (COM / DCOM). They can perform: i) querying ii) enumerating data iii) Running provider methods etc.
+________________
+
+
+WMI Infrastructure:
+WMIPRVSE.EXE -> This is the provider host for WMI
+WMI Infrastructure: It consists of various components.
+1. WMI Core (CIM Object Manager): It is component of WBEM system, it manages CIM objects, facilitates interaction between WBEM Client Applications; Manages CIM repository; Performs security checks to authenticate users for WBEM Clients.
+2. WMI Repository (CIM Repository): It is a language independent database of the namespace, classes, objects instances within an enterprise environment, which are stored in a static form.
+3. COM (Component Object Model): It is a platform independent, distributed, object-oriented system that creates a binary software components which can interact.
+4. DCOM (Distributed Component Object Model): It is extension of COM, which helps locate or interact with components/objects located on a different system, remote computer or even on the internet.
+________________
+
+
+* Svchost.exe -> It is implemented as a service process within a shared service host which can contain the WMI service (winmgmt)
+* The default startup type of WMI service is Automatic.
+* WMI service depends on RPC.
+Q: What is WMI? What is its purpose? uses?
+Q: What is COM/DCOM
+Q: What is ETW (1 marks)
+Q: How WMI Uses Event Tracing?
+Ans: WMI uses Event tracing to record WMI Service activity
+i) Event notification Support:
+ii) Query Language support
+iii) Security Support
+iv) Scripting access to performance counter data
+The command line tool "Wevtutil" is used to enable WMI Event tracing and locate WMI events.
+________________
+
+
+Q What is the command to the WMI Console
+-> WMI Mgmt.msc
+Q What is the tool to check WMI instances
+-> Wbemtest
+Q What is the path to WMI, .mof and dll files, repository?
+-> C:/Windows/System32/wbem
+Q What is the command to compile the deleted classes and sub-classes
+-> Mofcomp
+Q What is the command to register the classes and sub classes
+-> regsvr32
+________________
+
+
+Q: Event tracing for Windows (ETW) is deeply integrated into windows which is used to trace and log events.
+Q: What is the Service name of WMI
+The Service name of WMI is Winmgmt and it could run in a shared container of svchost.
+Q: What is the default startup type of WMI Service
+-> It is automatic
+Q What services depend on WMI Service.
+Ans SMS agent host, Windows firewall are examples of services dependent on WMI service.
+Q What service does the WMI depend on.
+-> Remote Procedure Call
+________________
+
+
+Q: What is WQL?
+Ans -> WQL (WMI Query Language) is tailored to support WMI, which is used to query OS, applications, network and other system components.
+eg: select, where, from.
+eg queries: select * from Win32_OperatingSystem
+Q: What is CIM Repository?
+Q: What are WMI Providers.
+________________
+
+
+Local account token filter policy
+(WMI) Study impersonation level
+-> 4 types
+Q What is CIMOM.
+Q What are WMI Providers
+Ans WMI Providers are intermediary between WMI Service & objects. WMI Providers starts as a service name. WMIPRVSE.exe whenever a query is made.
+This acts as a container and provides the requested information to the application/query.
+Each time a query is made from a different source, a separate service is started as WMIPRVSE.
+Q What are WMI Objects
+Q: What is namespace?
+Ans Namespace is a programming object that defines the scope for a set of classes and instances.
+* It is essentially a container or an environment where WMI provider classes are defined and managed.
+* Namespaces are used to organized classes that represent different managed environments.
+* Provides a hierarchical Organisation of classes.
+Default namespace
+* Root\Default
+* Root\CIMv2
+________________
+
+
+Local Account Token Filter Policy
+Q What is COM 
+Com is a platform-independent, distributed, object-oriented system to create software components in a binary standard which can interact.
+* COM basically functions as a translator and translates to binary standard.
+* Com defines how objects work over a distributed environment.
+* COM promotes reuse of software components from different vendors. A COM application usually consists of an executable file and additional components such as dll files.
+Q What is WMI Arbitrator?
+The WMI arbitrator is a component of the WINMGMT service that manages scheduling and execution of tasks received from WMI client processes.
+It resides in the WINMGMT (svchost.exe) and is implemented as the following static singleton instance: Wbemcore!CWmiArbitrator :: m_pArb
+What kind of information is tracked by WMI arbitrator.
+The arbitrator tracks queries and incoming client requests as tasks of object type: WbemCore!CWmiTask()
+Examples of some information tracked for these tasks include ClientProcessID, Client Computer Name, Last Client Activity Time, WQL Query Text, and Task submission time.
+* Event ID 5858: WMI-Activity/Operational
+   * Generated for cancellation of IDLE Task.
+* The 20-minute max idle timeout can be overridden by the following dword registry value:
+   * HKLM/system/Microsoft/wbem/CIMOM/ArbTaskMaxIdle (Default = 1200000ms)
+WMI Throttling
+WMI arbitrator throttling is a forced thread sleep state that occurs when the total amount of tracked task memory (m_uTotalMemoryUsage) reaches the throttling limit (m_uSystemHigh), which defaults to 256MB.
+To verify WMI Repository:
+Command: Winmgmt /verifyrepository can be used.
+Winmgmt /salvagerepository
+________________
+
+
+
+
+WinRM (Windows Remote Management)
+WinRM (Windows Remote Management)
+* Windows Remote Management is one component of the Windows hardware management feature that manages server hardware locally & remotely.
+* This feature includes a service that implements the WS-Man protocol, hardware diagnostic through BMC, and a COM API and scripting object that allow you to write applications that communicate remotely through WS-Man protocol.
+* Windows Remote Management is Microsoft's implementation of WS-management protocol.
+* WinRM provides a secure, efficient way for management applications and scripts to communicate with local and remote computers.
+* Name of the WinRM Service  WinRM
+* When a server is connected to a BMC that supports the WS-management standards, applications & scripts can use WinRM to communicate directly with BMC, even when the operating system is offline.
+Q: What is WS-management protocol?
+* It is a SOAP-based firewall friendly protocol designed for systems to locate and exchange management information.
+* Port 5985 is used when the systems are domain joined and are on the same network (HTTP).
+* Port 5986 is used when the systems are domain joined and are on a different network (HTTPS).
+WS-man is based on the following standard specifications:
+* HTTPS
+* SOAP over HTTP (WS-I Profile)
+* SOAP 1.2
+* WS-Addressing
+* WS-Transfer
+* WS-Enumeration
+* WS-Eventing
+List of components & features that are supplied by WinRM & hardware monitoring:
+* WinRM Scripting API: This scripting API enables you to obtain data from remote computers using scripts that perform WS-management protocol operations. WinRM scripting objects are implemented as a layer above the WS-management protocol.
+* The scripting objects enable you to obtain data or manage resources on a local or remote computer.
+________________
+
+
+* Winrm.cmd  This command line tool for system management is implemented in a Visual Basic scripting edition file (winrm.vbs) written using the WinRM scripting API. This tool enables administrators to configure WinRM and to get data or manage resources.
+* WinRS.exe  This command line tool enables administrators to remotely execute most cmd.exe using the WS-management protocol.
+Q: What is WinRM Listener?
+* It is a management service that implements a WS-management protocol to send and receive messages.
+* WinRM is a listener service.
+* A listener is defined by a transport (HTTP/HTTPS) and an IPv4 or IPv6 address.
+* You can create more than one WinRM listener instance on a single computer by giving them a different TCP-IP address or port number.
+Authentication for WinRM Remote Connections
+WinRM maintains security for communication between computers by supporting several standard methods of authentication and message encryption.
+* Default group access: During setup, WinRM creates a local group (Remote Management Users). WinRM then restricts remote access to any users who are not a member of either the local administrators group or the remote management users group. You can add local/domain users or domain groups to the Remote Management Users group.
+(Types of Security Standards used by WinRM)
+* Kerberos: It is the default method of authentication when the client is in a domain.
+* Negotiate: It is the default method of authentication when the client is not in a domain.
+   * If you specify Negotiate, Digest, or Basic authentication and fail to supply a connection option object, then you will receive an error indicating that explicit credentials are required.
+   * If HTTPS is not the transport, then the target remote computer must be configured in the list of TrustedHost computer.
+________________
+
+
+* Basic Authentication: It is disabled in the default configuration setting for both WinRM Client and WinRM Server.
+* UAC Affects access to the WinRM Service: When Negotiate or authentication is used in a workgroup, only the built-in administrator account can access the service.
+   * To allow all accounts in the administrators group to access this service (WinRM), set the following registry value: HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System
+   * LocalAccountTokenFilterPolicy = 1
+* IP address cannot be used when Kerberos method is used for authentication.
+* Client certificate:
+   * You must first enable the use of client certificate authentication on both the client and the service by using the winrm.cmd tool.
+   * You must also create an entry in the cert mapping table on the WinRM Server computer. This establishes a mapping between one or more certificates and a local account.
+   * Once the certificate is used for authentication and authorization, the corresponding local account is used for operations performed by the WinRM Service.
+   * Maximum size of certificate usable by WinRM is 16KB.
+________________
+
+
+BMC and Event Forwarding
+Q: What is BMC?
+-> It is a specialized microcontroller embedded in a computer's motherboard which acts as the brain of the system's monitoring, remote management, and other auxiliary functions, making it an integral component for server management.
+* Event forwarding, PowerShell remoting, and WinRS depend on WinRM.
+* Event viewer path: c:\windows\system32\winevt
+Q: What is Event Forwarding?
+-> WinRM supports event forwarding, allowing you to collect and forward events from remote computers to a central location.
+There are two types of event forwarding:
+1. Collector initiated (Pull)
+2. Source initiated (Push)
+________________
+
+
+Common WinRM Command Lines
+1. winrm quickconfig OR winrm qc
+   * Used to configure WinRM with default settings.
+2. winrm enumerate winrm/config/listener
+   * This command line is used to locate/enumerate listeners and the address.
+3. winrm get winrm/config
+   * To check the status of WinRM configuration settings.
+4. winrm set winrm/config/client/auth @{Digest="true"}
+   * This is used to change or set the authentication type.
+5. winrm e winrm/config/listener -r:addc
+   * -r: is for remote access.
+6. winrs -r:addc hostname
+7. Service name: Windows Event Collector
+WECSVC
+   1. Collector initiated: With this subscription the collector will have to establish outbound WINRM connection at pull events from the clients.
+   2. With the Source initiated subscription, the collector will wait for incoming connection from client
+-> What are the requirements:
+      1. Common requirements
+      * A subscription has to made on the collector server to forward events.
+      * The WinRM service has to be enabled on both (client & server (collector)).
+      * The account used to create the subscription needs to have permissions to read the event logs of the source computers. This permission can be configured using the builtin group called "Event log reader".
+      2. Requirements of Collector initiated event forwarding
+      * The client has to be reachable over the network and a firewall rule needs to be configured to accept the incoming traffic.
+      * The collector will have to contact each client to pull events for this reason this solution is not scalable and should not be the preferred option.
+      3. Requirements of Source initiated:
+      * The collector has to be reachable by the client.
+      * A policy has to be deployed to the client to point to the collector.
+-> Wecutil.exe: It is a Windows Event Collector utility that enables an administrator to create and manage subscriptions to event forwarded from remote event sources that support the WS-MAN protocol. Commonly, options and option values are case-insensitive for this utility.
+Enables to create and manage subscription to events that are forwarded from remote computers. The remote computer must support the WS-Management protocol.
+      * We need to run WECSVC if we get The RPC server is unavailable.
+Requirements to forward security logs to a Windows Event
+      1. Add Network Service to Builtin\Event Log Readers group.
+path: GPO\Policies\Preferences\Control Panel\Local users and groups.
+      2. Group policy object "Configure target subscription manager" was enabled in Default Domain Controllers policy.
+      3. Add "Network Service" SID to security log access via command line.
+      4. Log Access: Copy channel access value.
+      5. Once this has been done WinRM service must be restarted both DC and WEC Server.
+
+
+Q: What is MMC
+________________
+
+
+Q: What is MMC?
+-> MMC is a windows utility which provides a unified interface to the System Admin and advanced user to configure and manage system/computers.
+MMC hosts administrative tools aka snap-ins to display different components of windows settings.
+MMC could also be utilised to manage and can configure remote computers using WS-Management Protocol.
+Q: What is the service name for MMC.
+mmc.exe.
+________________
+
+
+Types of event
+There are five types of events that can be logged. All of these have well-defined common data can optionally include event-specific data.
+Verbose, Critical, information, Error, Warning.
+What is Task Scheduler
+-> The task scheduler service allows you to perform automated tasks on a chosen computer. Task scheduler monitors the time and criteria you choose and then executes the task when the criteria is met.
+         * Windows installer = msiserver
+         * Windows Event log = Eventlog
+         * Application identity = AppIDSvc
+Task scheduler automatically installed and started each time with system. It can be run through Task Scheduler (GUI) or from command prompt.
+In order to view, add, edit or delete scheduled tasks you must be a member of administrators, backup operators, server operators group on the local computer.
+Functions of task scheduler
+         * Schedule a task to run daily weekly, monthly or at certain times.
+         * Change the schedule for a task
+         * Stop a scheduled task
+         * Customize how a task runs at a scheduled time.
+Components in task scheduler
+         * Mstask.dll - Task scheduler interface DLL
+         * Mstask.exe - Task scheduler engine (Win 2000 only)
+         * Schedsvc.dll - Task scheduler engine (Later)
+         * Mstinit.exe - Task scheduler help.
+________________
+
+
+Components of task
+         * Triggers: Task scheduler uses event or time-based triggers to know when to start a task. Every task can specify one or more triggers to start the task.
+         * Actions: These are the actions, the actual work that is performed by the task. Every task can specify one or more actions to complete its work.
+         * Principals: Principals define the security context in which the task is run. For example a principal might define a specific user or user group that can run the task.
+         * Settings: There are the settings that the task scheduler uses to run the task with.
+________________
+
+
+Note: By default the task will be stopped after 72 hours when it runs. reg: ExecutionTimeLimit respect to conditions that are external to the task itself.
+Registration Information: This is administrative information that is gathered when the task is registered. (XML description of task)
+Data: This is additional documentation about the task that is supplied by the author of the task.
+Eg. for Registration information.
+-> Information about author
+-> date when task was registered
+-> XML description of the task.
+Types of trigger
+-> Time based Trigger
+-> Event based trigger
+-> Multiple triggers
+Note: Task are registered and run under a specific security context. Users can create applications that successfully registered, update delete or run tasks but the user must supply the correct credentials when a task is registered and the application must be running in a process with the correct privileges.
+________________
+
+
+A user must have write, read permission, delete and execute permission on a task to update, read, delete & run the task respectively.
+Members of the administrators group on the system account can read, update, delete and run any task.
+Members of the users group, the local service account and the Network Service account can only read, update delete and run the tasks that they have created.
+The executable for Windows Event Collector is wecutil.exe.
+Windows telemetry service -> utcsvc.
+Displayname -> Diagtrack
+________________
+
+
+MSI
+The Microsoft installer (MSI) is a software installation and configuration tool developed by Microsoft Corporation. It is used to package, distribute and deploy software on Windows OS.
+Features of MSI
+         * Transactional installation: MSI packages support a transactional installation process which ensures that the installation completes successfully or rolls back to the original state if an error occurs.
+         * Customizable installation: MSI packages can be customized to suit the specific needs of an organization or end user. This includes options for silent installations, custom dialogs, and custom actions.
+         * Self healing: MSI package can detect and repair missing or corrupted files and registry keys, ensuring that the software is always in a consistent state.
+         * Patch management: MSI packages support patch management, allowing software to be easily updated without requiring a complete new installation.
+         * Application management: MSI packages can be used to manage software on a Windows system, including installing, configuring and removing.
+-> Service name -> MSIserver
+Display name -> Windows installer
+Executable -> msiexec.exe
+Supported file extensions
+-> .msi : Windows installer database
+-> .msm : Windows installer merge module
+-> .msp : Windows installer Patch.
+-> .mst : Windows installer transform.
+msiexec.exe installs the products.
+Q: What is msi, msi installer, msi package?
+Q: What is the requirement of MSI package? Ans: Certificates (.pfx)
+Windows installer service depends on RPC.
+User policy for MSI: HKCU \ Software \ Policies \ Microsoft \ Windows \ installer
+Computer Policies: HKLM \ Software \ Policies \ Microsoft \ Windows \ installer
+________________
+
+
+Q: What is Windows installer. Ans: Windows installer is an installation and configuration service provided with windows that enables admins to provide better corporate deployment. It enables efficient installation and configuration of softwares.
+Q: What is MSI package. > It is a file format used by windows for installation, maintenance and removal of software. It supports the full extensions such as .msi, .msix, .msp, .mst etc.
+________________
+
+
+Q: What is the difference between .msi and .msix
+Ans: .MSI is a file extension or packaging format used for the distribution and installation of software on windows.
+.msix is also a windows app package format which provides a modern packaging experience to all windows apps.
+Using msix one can create custom package with pre configured settings for installation requirements. So that it can be deployed in a much efficient way by eliminating any user interaction or requirement during installation.
