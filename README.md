@@ -1,3 +1,2 @@
 # Notes
-Studying UEX
-Remmote Desktop 
+UserEx
