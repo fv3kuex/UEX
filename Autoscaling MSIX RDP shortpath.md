@@ -197,3 +197,17 @@ To use RDP Shortpath for managed network you must enable a UDP listener on the s
 
 **Q. Where we config the RDP Shortpath?** Hostpool \> Settings \> Networking \> RDP Shortpath
 
+**Using RDP Shortpath has the following key benefits:**
+
+Using URCP to enhance UDP achieves the best performance by dynamically learning network parameters and providing the protocol with a rate control mechanism.
+
+Higher throughput.
+
+When using STUN, the removal of extra relay points reduces round-trip time improves connection reliability and the user experience with latency-sensitive applications and input methods.
+
+In addition, for managed networks:
+
+RDP Shortpath brings support for configuring Quality of Service (QoS) priority for RDP connections through Differentiated Services Code Point (DSCP) marks.
+
+The RDP Shortpath transport allows limiting outbound network traffic by specifying a throttle rate for each session.
+
