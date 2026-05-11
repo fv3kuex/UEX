@@ -5,7 +5,7 @@ The cloud refers to a network of remote servers owned and managed by third-party
 Types of cloud computing Services:
 
 i) Infrastructure as a Service (IAAS): Users manage their own operating systems, software, data while provider manages the infrastructure.
-
+rdp
 ii) Platform as a Service (PAAS): Users manage their applications while the provider manages underlying infrastructure and platform tools.
 
 iii) Software as a Service (SAAS): Users access software applications hosted and managed by provider.
@@ -70,7 +70,7 @@ AVD \+ AAD
    ii) The Geographical database contains the connection files (.rdp) and icons for every resource that the user has been provisioned.  
    iii) The RD broker service returns the .rdp files and application icons to the web service.  
    iv) The RD web service returns this information to the users device.  
-3. User initiates connection using the .rdp file:  
+3. User initiates connection using the Windows app / Winodws app portal:  
    a) The remote session begins with a connection to Azure Front Door, which provides the global entry point to AVD.  
    b) Azure Front Door directs the connection to the gateway service with the lowest latency.  
    c) Gateway service queries the broker service for session hosts (with AAD token)  
