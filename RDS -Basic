@@ -1,0 +1,96 @@
+RDS
+Remote desktop Service > It is a Microsoft technology that allows users to remotely access applications and desktop it is commonly used to provide secure remote access to internal resources, enabling users to work from anywhere.
+Deployment types:
+Session based virtualization: This allows multiple users to share a single server providing a cost effective solution for remote access.
+Virtual Desktop Infrastructure: This provides each users with a sep dedicated virtual machine offering a more personalized and high performance experience.
+RD Session Host: The remote desktop Session host is a server role that enables multiple users to remotely connect to and run apps or desktops on a single server via the remote desktop protocol RDP.
+It is a core component of remote desktop services (RDS) formally known as Terminal Services.
+RD Connection Broker > RD Connection Broker role is a server role that acts as the central orchestration and load-balancing computers within remote desktop services (RDS).
+It manages user connections, session assignments and also reconnects the disconnected sessions.
+RD Web Access: The RD WA is a server role that provides a web-based portal / interface for users to access the published RDS resources.
+Administrators publish resources via Remote Desktop Connection Broker. RD Web Access displays them dynamically.
+Users login via a browser to view and launch the published resources.
+RD Gateway > It is a server role that grants users on public network access to windows desktops and applications hosted on.
+RD Gateway > It grants users on public network access to intranet RDS resources (Windows desktop and applications).
+It acts as a gateway, tunneling RDP traffic without exposing RDP ports directly to public internet.
+OR
+The RD Gateway role enables secure, encrypted connections to RDS resources, (desktop/remote apps) over the internet.
+Virtualization Host: Remote desktop virtualization host integrates with Hyper-V to host virtual machines and provide them to users as VM.
+With RD Gateway, users can access internal network resources from remote locations without the need of a VPN.
+RD Licensing > It refers to the role manages remote desktop services, client access licenses also known as CAL's, enabling compliant access to RDS session-based functionality. Such as multi-user desktops and remote app programs hosted on RDSH servers.
+This role authenticates incoming connections, issues CALS (with help of DC), tracks usage and enforces licensing policies.
+Key functionality:
+Issues CAL: Grants per user or per device RDS CALs to validated clients.
+Compliance Reporting: Provides usage diagnostics, over-allocation alerts and audit logs.
+The communication security in RDS depends on the core process
+Encryption of the data stream
+Transport Layer Security
+The Credential Security Service Provider Cred (SSP).
+Encryption of Data Stream:
+RDS Encryption Levels (min encryption)
+It secures RDP communications between clients and RDS servers. Encryption levels control the minimum security strength enforced for RDP connections.
+There are 4 Encryption Levels
+Low: (0) All data sent from the client to the server is encrypted using 56-bit encryption. (Not recommended) Data sent from server to client is not encrypted.
+Client Compatible: (1) Encrypts client/server communication at the maximum key strength supported by the client. Use this level when the Terminal Server is running in an environment containing mixed or legacy clients. This is default settings.
+High: (2) Encrypts client/server communication using 128-bit encryption. Use this level when the client that access the Terminal Server also supports 128-bit encryption. If this is set clients that do not support 128-bit encryption will not be able to connect.
+FIPS client: (3) All client/server communication is encrypted and decrypted with the Federal Information Processing Standard (FIPS) encryption algorithms.
+FIPS 140-1 (1994) and its successor FIPS 140-2 (2001) describe these requirements.
+(Security Layer)
+Transport Security Layer (TLS): It is for establishing a secure connection between client and a server, in which the server has proved its identity.
+This setting determines the security method used when clients connect to a RDSH server.
+There are 3 security layers.
+SSL: (2): Specifies that the Transport Layer Security (TLS) protocol is used by the server and the client for authentication before a remote desktop connection is established.
+Negotiate (1): Specifies that the server and the client negotiate the method for authentication before a remote desktop connection is established. This is the default value.
+(0)
+RDP Security Layer: It specifies that the Microsoft Remote Desktop Protocol is used by the server and the client for authentication before a desktop connection is established.
+RDP is a microsoft protocol that support terminal services across heterogeneous network environments.
+Ports
+Connection Flow 1 (Same network)
+https://RDWA.domain.com/RDweb
+Client (Win11) (WS) -- :443 > Firewall -- > IIS RDWA -- User login / Remoteapp/desktop resource > .rdp file -- :3389 > RDCB -- :3389 > RDSH 1, RDSH 2, RDSH 3
+RDWA -- :5504 > RDCB
+Windows Internal Database (WID) <-- RDCB
+Load balance
+Existing Active Session
+Existing Pending Session
+No Connection (on last session)
+Connection flow (Public NW)
+Client (Win11) (WS) -- :443 > Firewall -- > IIS RDWA -- Login / Remote APP > .rdp -- :5504 > RDCB
+RDWA -- :443 > RDGW (CAP / RAP) -- :3389 > RDCB (CAP / RAP) -- :3389 > RDSH
+CAP: Connection Authorization policy
+RAP: Resource Authorization policy
+RDS Architecture with Gateway & Licensing
+RDSH: Where session lands (Destination)
+RDWA: Hosts Web Services Provides User an interface to access published RDS resources
+RDCB: Decides where to send the connection
+Once Session host role is installed on a server it can host a maximum of 999,999 sessions simultaneously.
+If a user is outside of network gateway is required. It provides additional security by allowing only selective users to access resource. We can set two settings in gateway as to which users and apps should be permitted: CAP and RAP.
+RD Connection broker checks if the user has any active sessions. It also checks which session host to be granted for requested session. These information are stored on Connection broker at path C:\WINDOWS\WID folder.
+It contains information like
+> Remote APP * Source IP * Destination IP
+> Session ID * Dist IP
+> User ID * Source IP
+Port 443 is used for HTTPS
+Port 5504
+Firewall checks if user should be allowed to enter premises or not. Once allowed request gets to web access.
+CONNECTION FLOW RDS (Without Gateway)
+User initiates connection by entering URL (eg: https://rdwa.domain.com/rdweb) The connection happens on port 443 for HTTPS.
+Firewall checks if the user should be allowed or not to enter premises. If allowed the request gets to RDWA.
+After firewall it gets to RD Web Access. It checks through Internet Information Service (IIS) > Web Access reaches out to AD and asks if the user should be allowed or not. (IIS authenticates it)
+IIS authentication is a form based authentication.
+Port 5504 creates a tunnel which helps RD Web access to get information about which apps / resource are to be accessed by a particular domain.
+> 5504 (RADCM Services)
+> Users are able to see the resource on the RDWA.
+> On clicking the app the .rdp gets downloaded.
+> The .rdp file contains information like Authentication, gateway details, and other .rdp configuration settings.
+> The FQDN in the .rdp file will always be of connection broker.
+User launches the .rdp file, it reaches to RDCB on port 3389.
+> Connection information received by RDCB is then used to load balance > WID Information.
+After connection broker (RDCB) load balance it points the connection to the available RDSH.
+Apps are located / installed on RDSH but displayed on RDWA.
+RDCB
+Services
+Remote Desktop Connection Broker Service (TSS DIS) Terminal Services Session | Remote desktop Management Service (RDMS) Responsible for displaying the RDS Deployment overview.
+Port 5985 is used for WinRM Communication.
+> It is not required at time of establishing connection.
+RDMS: Responsible for displaying the RDS deployment
